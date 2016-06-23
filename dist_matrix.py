@@ -1,7 +1,7 @@
 import googlemaps
 import numpy as np
 import seaborn as sns; sns.set()
-
+import pandas as pd
 
 f = open("places.txt", 'r')
 
@@ -27,7 +27,11 @@ f.close()
 
 gcl = googlemaps.Client(key=key)
 
+
+lat_lon = pd.read_csv('latlon.txt')
+
 dist_mat = np.zeros((len(names), len(names)))
+time_mat = np.zeros((len(names), len(names)))
 
 for i, name1 in enumerate(names):
 
@@ -43,8 +47,23 @@ for i, name1 in enumerate(names):
                             gcl, name1, name2, mode='driving',language='English', units='metric')
 		
 			dist_mat[i][i+j] = response["rows"][0]["elements"][0]["distance"]["value"]
+			time_mat[i][i+j] = response["rows"][0]["elements"][0]["duration"]["value"]
+
 		except Exception:
-			print("No route between %s and %s" %(name1, name2))
+
+			if (lat_lon.iloc[i].values[0] != None):
+	
+				try:
+					response = googlemaps.distance_matrix.distance_matrix(
+                            gcl, tuple(lat_lon.iloc[i].values), tuple(lat_lon.iloc[i+j].values), mode='driving',language='English', units='metric')
+		
+					dist_mat[i][i+j] = response["rows"][0]["elements"][0]["distance"]["value"]
+					time_mat[i][i+j] = response["rows"][0]["elements"][0]["duration"]["value"]
+				except:
+					pass
+			else:
+				print('No Route found between %s and %s' %(name1, name2))
+
 
 np.savetxt("output.txt", dist_mat)
 
