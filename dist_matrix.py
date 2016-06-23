@@ -3,27 +3,34 @@ import numpy as np
 import seaborn as sns; sns.set()
 import pandas as pd
 
-f = open("places.txt", 'r')
 
-urls = f.readlines()
+def find_dists():
 
-f.close()
+	# begin with a list of places
+	# this list was scraped from wikipedia,
+	# which turned out to be a really shit idea 
+	# as the url format is useless.
+	f = open("places.txt", 'r')
 
-urls = [url.rstrip('\n') for url in urls]
+	urls = f.readlines()
 
-names = []
+	f.close()
 
-for url in urls:
+	urls = [url.rstrip('\n') for url in urls]
 
-	url = (url.split('/')[-1]).replace('%27', "'")
-	names.append( url.replace('_', "+") )
+	names = []
+
+	for url in urls:
+
+		url = (url.split('/')[-1]).replace('%27', "'")
+		names.append( url.replace('_', "+") )
 
 
-f = open('api.key','r')
-
-key = f.read()
-key = key.rstrip(' \n')
-f.close()
+	f = open('api.key','r')
+	# get the api key
+	key = f.read()
+	key = key.rstrip(' \n')
+	f.close()
 
 gcl = googlemaps.Client(key=key)
 
@@ -65,5 +72,6 @@ for i, name1 in enumerate(names):
 				print('No Route found between %s and %s' %(name1, name2))
 
 
-np.savetxt("output.txt", dist_mat)
+np.savetxt("dist.txt", dist_mat + dist_mat.T)
+np.savetxt("time.txt", time_mat + time_mat.T)
 
