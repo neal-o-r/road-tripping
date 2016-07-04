@@ -5,6 +5,21 @@ import pandas as pd
 
 def find_dists():
 
+	f = open("places.txt", 'r')
+
+	urls = f.readlines()
+
+	f.close()
+
+	urls = [url.rstrip('\n') for url in urls]
+
+	names = []
+
+	for url in urls:
+
+        	url = (url.split('/')[-1]).replace('%27', "'")
+        	names.append( url.replace('_', " ") )
+
 	
 	f = open('api.key','r')
 	# get the api key
@@ -22,7 +37,9 @@ def find_dists():
 
 
 	for i, name1 in enumerate(names):
-		# cycle through the names	
+		# cycle through the names
+		print i
+	
 		for j, name2 in enumerate(names[i:]):
 			if name1 == name2:
 				dist_mat[i][j] = 0.
