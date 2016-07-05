@@ -1,55 +1,77 @@
 import numpy as np
 import random as rd
+import routes as rt
 
-def length_of_trip(order, dists):
-	# given a distance matrix and an ordered route
-	# this function returns the distance travelled
+def swap_pair(input_list, n=3):
+	# given a list, do n pair swaps
+	for i in range(n):
 
-	distance_travelled = 0.
-	for i in range(len(order)):
-	
-		from_stop = order[i][0]
-		to_stop	  = order[i][1]
-		distance_travelled += dists[from_stop][to_stop]
+		index = rd.randrange(len(input_list) - 1)
+		input_list[index], input_list[index-1] = \
+		input_list[index-1], input_list[index]
 
-	
-	return distance_travelled
+	return input_list
+
+def move_section(input_list):
+
+	start_index = rd.randint(0, len(input_list) - 1)
+	length = rd.randint(2, 20)
+    
+	subset = input_list[start_index:start_index + length]
+	input_list = input_list[:start_index] + input_list[start_index + length:]
+    
+	insert_index = rd.randint(0, len(input_list) + len(subset) - 1)
+	output_list = input_list[:insert_index] + subset + input_list[insert_index:]
+    	return output_list
+
+
+def run_algo(dists, gens=100, pop_size=10):
+
+	pop_subset_size = int(pop_size / 10.)
+        gen_10pct = int(gens / 10.)
+
+	population = []
+	for i in range(pop_size):
+		order = range(52)
+		rd.shuffle(order)
+		population.append(order)
+
+	for gen in range(gens):
+
+		fitness = []
+		for p in population:
+			path = rt.Route(p) 	
+			fitness.append(path.length_of_route(dists))
 		
+		new_pop = []
+		for rank, index in enumerate(sorted(range(len(fitness)), key=lambda k: fitness[k])[:pop_subset_size]):
+            
+			if (gen % gen_10pct == 0 or gen == gen - 1) and rank == 0:
+                		print("Generation %d" %gen)
+                		print(population[index])
+				path = rt.Route(population[index])
+                		print("Length: %f" %path.length_of_route(dists))
+				print("")
 
-def randomise_all():
-	# create a random cycle
-	# all cycles visit each landmark once
-	stops = range(52)
-	order = []
-	rd.shuffle(stops)
+			
+            # Create 1 exact copy of each of the top road trips
+            		new_pop.append(population[index])
 
-	stop = stops[0]
-	for s in stops:
-		
-		stops.remove(stop)
-		next_stop = rd.choice(stops)
-		
-		order.append([stop,next_stop])	
-		stop = next_stop
+            # Create 2 offspring with 1-3 point mutations
+            		for offspring in range(2):
+                		new_pop.append(swap_pair(population[index]))
+                
+            # Create 7 offspring with a single shuffle mutation
+            		for offspring in range(7):
+                		new_pop.append(move_section(population[index]))
 
-	return set(tuple(x) for x in order)
+        # Replace the old population with the new population of offspring 
+        	for i in range(len(population))[::-1]:
+            		del population[i]
 
+        	population = new_pop
 
-def swap_pair(order_set, number=3):
-	# switches "number" pairs in order
-	order = list(order_set) 
-	order = [list(x) for x in order]
-
-	for i in range(number):
-
-		point = rd.randrange(0, len(order)-1)
-		
-		order[point][1], order[point-2][0]   = order[point-2][0], order[point][1]
-		order[point-1][1], order[point-3][0] = order[point-3][0], order[point-1][1]
-
-	return order
-
-
+	return path
 
 
 f = open("places.txt", 'r')
@@ -67,10 +89,7 @@ for url in urls:
         url = (url.split('/')[-1]).replace('%27', "'")
         names.append( url.replace('_', " ") )
 
-
 dists = np.loadtxt("dist.txt") / 1000. # km
 times = np.loadtxt("time.txt")
-
-
 
 
