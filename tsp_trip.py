@@ -1,6 +1,27 @@
 import numpy as np
 import random as rd
 import routes as rt
+import pandas as pd
+
+			
+def greedy_path(dists):
+	
+	path=[0]
+	for i in range(52):
+		
+		dist_from = dists[i]
+
+	 	points = range(52)
+		
+		for j in path:
+			if j in points:
+				points.remove(j) 
+		
+		dist_from = dist_from[points]
+		
+		path.append(np.argmin(dist_from))
+
+	return path
 
 def swap_pair(input_list, n=3):
 	# given a list, do n pair swaps
@@ -25,27 +46,34 @@ def move_section(input_list):
     	return output_list
 
 
-def run_algo(dists, gens=100, pop_size=10):
+def run_algo(dists, gens=15000, pop_size=100):
 
 	pop_subset_size = int(pop_size / 10.)
         gen_10pct = int(gens / 10.)
 
 	population = []
+	best = None
+	best_len = 1e10
 	for i in range(pop_size):
 		order = range(52)
 		rd.shuffle(order)
 		population.append(order)
-
+	
 	for gen in range(gens):
 
 		fitness = []
 		for p in population:
 			path = rt.Route(p) 	
 			fitness.append(path.length_of_route(dists))
-		
+	
+		if min(fitness) < best_len:
+			best = rt.Route(population[fitness.index(min(fitness))])		
+			best_len = best.length_of_route(dists)
+	
 		new_pop = []
 		for rank, index in enumerate(sorted(range(len(fitness)), key=lambda k: fitness[k])[:pop_subset_size]):
-            
+			  
+
 			if (gen % gen_10pct == 0 or gen == gen - 1) and rank == 0:
                 		print("Generation %d" %gen)
                 		print(population[index])
@@ -53,7 +81,6 @@ def run_algo(dists, gens=100, pop_size=10):
                 		print("Length: %f" %path.length_of_route(dists))
 				print("")
 
-			
             # Create 1 exact copy of each of the top road trips
             		new_pop.append(population[index])
 
@@ -64,14 +91,13 @@ def run_algo(dists, gens=100, pop_size=10):
             # Create 7 offspring with a single shuffle mutation
             		for offspring in range(7):
                 		new_pop.append(move_section(population[index]))
-
         # Replace the old population with the new population of offspring 
         	for i in range(len(population))[::-1]:
             		del population[i]
 
         	population = new_pop
 
-	return path
+	return best
 
 
 f = open("places.txt", 'r')
@@ -89,7 +115,22 @@ for url in urls:
         url = (url.split('/')[-1]).replace('%27', "'")
         names.append( url.replace('_', " ") )
 
+df = pd.read_csv("latlon.txt")
+
 dists = np.loadtxt("dist.txt") / 1000. # km
 times = np.loadtxt("time.txt")
+'''
+best = run_algo(dists)
+
+print("Length of best route", best.length_of_route(dists))
+indices = [x[0] for x in best.route]
+
+for i in indices:
+
+	print( '"' + str(df.Latitude[i]) + ',' + str(df.longitude[i]) + '"' + ',')
+'''
+
+
+
 
 
