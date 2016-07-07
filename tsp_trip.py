@@ -12,7 +12,7 @@ def greedy_path(dists):
 		dist_from = dists[i]
 
 	 	points = range(52)
-		
+		points.remove(0.0)	
 		for j in path:
 			if j in points:
 				points.remove(j) 
