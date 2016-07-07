@@ -4,22 +4,27 @@ import routes as rt
 import pandas as pd
 
 			
-def greedy_path(dists):
+def greedy_path(dists, start=0):
 	
-	path=[0]
-	for i in range(52):
+	path=[start]
+	for i in range(50):
 		
-		dist_from = dists[i]
+		dist_from = dists[path[-1]]
 
+<<<<<<< HEAD
 	 	points = range(52)
 		points.remove(0.0)	
+=======
+	 	points = range(51)
+		points.remove(i)		
+>>>>>>> 91f87b6e19a00fa2629288baea96dbedc335f66d
 		for j in path:
 			if j in points:
 				points.remove(j) 
 		
-		dist_from = dist_from[points]
-		
-		path.append(np.argmin(dist_from))
+		dist_from_sub = dist_from[points]
+		index = np.where(dist_from == np.min(dist_from_sub))		
+		path.append(index[0][0])
 
 	return path
 
@@ -46,7 +51,7 @@ def move_section(input_list):
     	return output_list
 
 
-def run_algo(dists, gens=15000, pop_size=100):
+def run_algo(dists, gens=1000, pop_size=50):
 
 	pop_subset_size = int(pop_size / 10.)
         gen_10pct = int(gens / 10.)
@@ -55,9 +60,7 @@ def run_algo(dists, gens=15000, pop_size=100):
 	best = None
 	best_len = 1e10
 	for i in range(pop_size):
-		order = range(52)
-		rd.shuffle(order)
-		population.append(order)
+		population.append(greedy_path(dists, start=i))
 	
 	for gen in range(gens):
 
@@ -119,7 +122,10 @@ df = pd.read_csv("latlon.txt")
 
 dists = np.loadtxt("dist.txt") / 1000. # km
 times = np.loadtxt("time.txt")
-'''
+
+dists = np.delete(dists, (41), axis=1)
+dists = np.delete(dists, (41), axis=0)
+
 best = run_algo(dists)
 
 print("Length of best route", best.length_of_route(dists))
@@ -128,7 +134,6 @@ indices = [x[0] for x in best.route]
 for i in indices:
 
 	print( '"' + str(df.Latitude[i]) + ',' + str(df.longitude[i]) + '"' + ',')
-'''
 
 
 
