@@ -3,10 +3,10 @@
   <head>
   	<meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-    <meta name="description" content="Randy Olson uses machine learning to find the optimal road trip across the U.S.">
+    <meta name="description" content="">
     <meta name="author" content="Randal S. Olson">
-    
-    <title>The optimal road trip across the U.S. according to machine learning</title>
+   
+    <title>The optimal road trip around Ireland</title>
     <style>
       html, body, #map-canvas {
         height: 100%;
@@ -24,7 +24,9 @@
         border: 1px solid #999;
       }
     </style>
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true"></script>
+ 
+
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&key="></script>
     <script>
 		var routes_list = []
 		var markerOptions = {icon: "http://maps.gstatic.com/mapfiles/markers2/marker.png"};
@@ -36,7 +38,7 @@
 		function initialize() {
 		  var center = new google.maps.LatLng(53.4, -7.9);
 		  var mapOptions = {
-			zoom: 5,
+			zoom: 7,
 			center: center
 		  };
 		  map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
@@ -149,6 +151,7 @@
     </script>
   </head>
   <body>
-    <div id="map-canvas"></div>
+    <div id="map-canvas"  style="height: 100%; width=100%;"></div>
+  <script type="text/javascript">initialize();</script>
   </body>
 </html>
