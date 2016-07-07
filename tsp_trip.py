@@ -11,13 +11,8 @@ def greedy_path(dists, start=0):
 		
 		dist_from = dists[path[-1]]
 
-<<<<<<< HEAD
-	 	points = range(52)
-		points.remove(0.0)	
-=======
 	 	points = range(51)
 		points.remove(i)		
->>>>>>> 91f87b6e19a00fa2629288baea96dbedc335f66d
 		for j in path:
 			if j in points:
 				points.remove(j) 
@@ -28,8 +23,9 @@ def greedy_path(dists, start=0):
 
 	return path
 
-def swap_pair(input_list, n=3):
+def swap_pair(input_list1, n=3):
 	# given a list, do n pair swaps
+	input_list = list(input_list1)
 	for i in range(n):
 
 		index = rd.randrange(len(input_list) - 1)
@@ -38,8 +34,8 @@ def swap_pair(input_list, n=3):
 
 	return input_list
 
-def move_section(input_list):
-
+def move_section(input_list1):
+	input_list = list(input_list1)
 	start_index = rd.randint(0, len(input_list) - 1)
 	length = rd.randint(2, 20)
     
@@ -50,8 +46,14 @@ def move_section(input_list):
 	output_list = input_list[:insert_index] + subset + input_list[insert_index:]
     	return output_list
 
+def fitness_func(path, dists):
 
-def run_algo(dists, gens=1000, pop_size=50):
+	path = rt.Route(path) 	
+	fitness = path.length_of_route(dists)
+	
+	return fitness
+
+def run_algo(dists, gens=5000, pop_size=50):
 
 	pop_subset_size = int(pop_size / 10.)
         gen_10pct = int(gens / 10.)
@@ -66,42 +68,38 @@ def run_algo(dists, gens=1000, pop_size=50):
 
 		fitness = []
 		for p in population:
-			path = rt.Route(p) 	
-			fitness.append(path.length_of_route(dists))
-	
+			fitness.append(fitness_func(p, dists))
+
 		if min(fitness) < best_len:
 			best = rt.Route(population[fitness.index(min(fitness))])		
 			best_len = best.length_of_route(dists)
 	
 		new_pop = []
-		for rank, index in enumerate(sorted(range(len(fitness)), key=lambda k: fitness[k])[:pop_subset_size]):
-			  
+		for rank, index in enumerate(np.argsort(fitness)[:pop_subset_size]):
 
 			if (gen % gen_10pct == 0 or gen == gen - 1) and rank == 0:
                 		print("Generation %d" %gen)
                 		print(population[index])
-				path = rt.Route(population[index])
-                		print("Length: %f" %path.length_of_route(dists))
+                		print("Length: %f" %fitness[index])
 				print("")
 
             # Create 1 exact copy of each of the top road trips
             		new_pop.append(population[index])
 
             # Create 2 offspring with 1-3 point mutations
-            		for offspring in range(2):
+            		for i in range(2):
                 		new_pop.append(swap_pair(population[index]))
                 
             # Create 7 offspring with a single shuffle mutation
-            		for offspring in range(7):
+            		for i in range(7):
                 		new_pop.append(move_section(population[index]))
+
         # Replace the old population with the new population of offspring 
         	for i in range(len(population))[::-1]:
             		del population[i]
-
+		#return population, new_pop
         	population = new_pop
-
 	return best
-
 
 f = open("places.txt", 'r')
 
@@ -120,11 +118,11 @@ for url in urls:
 
 df = pd.read_csv("latlon.txt")
 
-dists = np.loadtxt("dist.txt") / 1000. # km
+dists_in = np.loadtxt("dist.txt") / 1000. # km
 times = np.loadtxt("time.txt")
 
-dists = np.delete(dists, (41), axis=1)
-dists = np.delete(dists, (41), axis=0)
+dists1 = np.delete(dists_in, (41), axis=1)
+dists = np.delete(dists1, (41), axis=0)
 
 best = run_algo(dists)
 
