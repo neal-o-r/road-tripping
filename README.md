@@ -14,7 +14,7 @@ The final output can be seen here:
 
 And the live map is hosted at http://www.n-o-r.xyz/road-tripping.html.
 
-And here are the places visited in order (the path is a closed loop, so when you get to 51 you can go back to the start, and you can also start anywhere you like):
+Here are the places visited in order (the path is a closed loop, so when you get to 51 you can go back to the start, and you can also start anywhere you like):
 
 1. Enniscorthy
 2. Avoca
