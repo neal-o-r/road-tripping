@@ -7,7 +7,12 @@ I wanted to get the optimal (minimum) distance for a closed path that visited ev
 
 To get around this I began with the simplest solution, the so-called 'greedy' path. That is, beginning from a given place, go to the nearest place that hasn't yet been visited, and repeat this until you're back at the start again. I did this for 50 of the locations, giving 50 different paths. I then passed these into an evolutionary algorithm. This took the best five paths, and generated 10 random offspring from each, where each of the offspring has a random mutation in it. This gave a new 50 paths from which we take the top five again, mutate them, and around and around we go. I did this 5000 times to try to get a decent path. There's not guarantee that this path will be the actual minimum, but it should be pretty good.
 
-The final output can be visualised here: http://www.n-o-r.xyz/road-tripping.html. And here are the places visited in order (the path is a closed loop, so when you get to 51 you can go back to the start, and you can also start anywhere you like):
+The final output can be seen here:  
+![alt tag](https://github.com/neal-o-r/road-tripping/blob/master/map.jpg)
+
+And the live map is hosted at http://www.n-o-r.xyz/road-tripping.html.
+
+And here are the places visited in order (the path is a closed loop, so when you get to 51 you can go back to the start, and you can also start anywhere you like):
 
 1. Enniscorthy
 2. Avoca
