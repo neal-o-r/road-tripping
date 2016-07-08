@@ -51,7 +51,7 @@ The final output can be visualised here: http://www.n-o-r.xyz/road-tripping.html
 40. Monaghan Town
 41. Tayto Park
 42. Monasterboice
-43. Battle of the Boyne
+43. The Boyne
 44. Newgrange
 45. Hill of Tara
 46. Russborough House
