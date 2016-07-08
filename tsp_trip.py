@@ -144,6 +144,7 @@ for i in indices:
 	print( '"' + str(df.Latitude[i]) + ',' + str(df.longitude[i]) + '"' + ',')
 
 
-
+for i, j in enumerate(indices):
+	print(str(i+1) + ". " + names[j])
 
 
