@@ -1,11 +1,13 @@
 # Road Tripping
 Travelling salesman around Irish landmarks based on Randal Olson's U.S. road trip code.
 
-This code computes an optimal route around 51 Irish landmarks, chosen from here: https://en.wikipedia.org/wiki/List_of_tourist_attractions_in_Ireland. I scraped wikipedia for the latitudes and longitudes of the locations, and then fed those into the Google Maps API to get the distances between all of the locations.
+This code computes an optimal route around 51 Irish landmarks, chosen from  [Wikipedia](https://en.wikipedia.org/wiki/List_of_tourist_attractions_in_Ireland). I scraped Wikipedia for the latitudes and longitudes of the landmarks, and then fed those into the Google Maps API to get the driving distances between all of them.
 
 I wanted to get the optimal (minimum) distance for a closed path that visited every site once, which is the classic Travelling Salesman Problem. The core of this problem is that for even a modest number of destinations checking all of the paths between them to find the minimum is infeasible. In this case, for 51 locations, there are ~10<sup>64</sup> differnt possible paths. This is a pretty similar order of magnitude to the number of atoms in all of the stars in the Milky Way. So it's a too many to check, is the point. 
 
 To get around this I began with the simplest solution, the so-called 'greedy' path. That is, beginning from a given place, go to the nearest place that hasn't yet been visited, and repeat this until you're back at the start again. I did this for 50 of the locations, giving 50 different paths. I then passed these into an evolutionary algorithm. This took the best five paths, and generated 10 random offspring from each, where each of the offspring has a random mutation in it. This gave a new 50 paths from which we take the top five again, mutate them, and around and around we go. I did this 5000 times to try to get a decent path. There's not guarantee that this path will be the actual minimum, but it should be pretty good.
+
+The final path that I came up with has a total length of ~2750km, which would take around 45 total hours to drive. Interestingly this 'optimal' route is only 10% shorter than the best of the greedy routes.
 
 The final output can be seen here:  
 ![alt tag](https://github.com/neal-o-r/road-tripping/blob/master/map.jpg)
