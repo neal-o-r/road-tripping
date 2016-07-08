@@ -5,7 +5,8 @@ import pandas as pd
 
 			
 def greedy_path(dists, start=0):
-	
+# function to compute the greedy path (from any point
+# go to nearest that hasn't been visited) from a given starting point	
 	path=[start]
 	for i in range(50):
 		
@@ -25,7 +26,8 @@ def greedy_path(dists, start=0):
 
 def swap_pair(input_list1, n=3):
 	# given a list, do n pair swaps
-	input_list = list(input_list1)
+	input_list = list(input_list1) # this copy is a bit shit,
+				# but it's necessary to stop in place shuffling
 	for i in range(n):
 
 		index = rd.randrange(len(input_list) - 1)
@@ -35,6 +37,8 @@ def swap_pair(input_list1, n=3):
 	return input_list
 
 def move_section(input_list1):
+	# move a section of the route to somewhere else
+
 	input_list = list(input_list1)
 	start_index = rd.randint(0, len(input_list) - 1)
 	length = rd.randint(2, 20)
@@ -47,20 +51,20 @@ def move_section(input_list1):
     	return output_list
 
 def fitness_func(path, dists):
-
+	# get the length of a path.
 	path = rt.Route(path) 	
 	fitness = path.length_of_route(dists)
 	
 	return fitness
 
 def run_algo(dists, gens=5000, pop_size=50):
-
+	# run evolutionary algorithm
 	pop_subset_size = int(pop_size / 10.)
         gen_10pct = int(gens / 10.)
 
 	population = []
 	best = None
-	best_len = 1e10
+	best_len = 1e10 # dummy value to start
 	for i in range(pop_size):
 		population.append(greedy_path(dists, start=i))
 	
@@ -115,14 +119,20 @@ for url in urls:
 
         url = (url.split('/')[-1]).replace('%27', "'")
         names.append( url.replace('_', " ") )
+# get names and lat-lons
 
 df = pd.read_csv("latlon.txt")
 
 dists_in = np.loadtxt("dist.txt") / 1000. # km
-times = np.loadtxt("time.txt")
+times_in = np.loadtxt("time.txt")
 
 dists1 = np.delete(dists_in, (41), axis=1)
 dists = np.delete(dists1, (41), axis=0)
+
+times1 = np.delete(times_in, (41), axis=1)
+times  = np.delete(times1, (41), axis=0)
+# because i'm an idiot places 41 & 42 were the same place,
+# so there are duplicate distances. this deletes them.
 
 best = run_algo(dists)
 
