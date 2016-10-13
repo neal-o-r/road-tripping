@@ -10,7 +10,7 @@ To get around this I began with the simplest solution, the so-called 'greedy' pa
 The final path that I came up with has a total length of ~2750km, which would take around 45 total hours to drive. Interestingly this 'optimal' route is only 10% shorter than the best of the greedy routes.
 
 The final output can be seen here:  
-![alt tag](https://github.com/neal-o-r/road-tripping/blob/master/map.jpg)
+![Map](https://github.com/neal-o-r/road-tripping/blob/master/map.jpg)
 
 And the live map is hosted at http://www.n-o-r.xyz/road-tripping.html.
 
