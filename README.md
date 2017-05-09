@@ -1,5 +1,5 @@
 # Road Tripping
-Travelling salesman around Irish landmarks based on Randal Olson's U.S. road trip code.
+Travelling salesman around Irish landmarks.
 
 This code computes an optimal route around 51 Irish landmarks, chosen from  [Wikipedia](https://en.wikipedia.org/wiki/List_of_tourist_attractions_in_Ireland). I scraped Wikipedia for the latitudes and longitudes of the landmarks, and then fed those into the Google Maps API to get the driving distances between all of them.
 
