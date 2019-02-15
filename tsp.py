@@ -53,7 +53,7 @@ def try_swaps(route_in):
 def swap_points(r):
         min_l = r.length()
         p = r.path[:]
-        for s in swaps:
+        for s in subsegments(len(r)):
                 i, j = s
                 j = j % len(p)
                 p[i:j] = reversed(p[i:j])
@@ -64,15 +64,8 @@ def swap_points(r):
                         p = r.path[:]
 
         return r
-pts = rand_points(9)
-swaps = subsegments(9)
-o = try_swaps(Route(pts))
-'''
-g = Route(greedy(ipts[1:], [ipts[0]]))
-swaps = subsegments(len(ipts))
-opt = try_swaps(g)
-plot_path(opt)
-with open('optimal_route_time.txt', 'w') as f:
-        for p in opt:
-                f.write(f'"{p.imag},{p.real}",\n')
-'''
+
+if __name__ = "__main__":
+        pts = rand_points(9)
+        o = try_swaps(Route(pts))
+
